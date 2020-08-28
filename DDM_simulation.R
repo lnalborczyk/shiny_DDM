@@ -68,7 +68,3 @@ ddm <- function (nobs = 1e2, alpha = 2, beta = 0.5, delta = 0.5, tau = 0.3) {
 #         cex = 0.8)
 #   rug(rt[rc == 2], col = "red", side = 3)
 # }
-
-#Rstats question: How would you reproduce this figure using ggplot2? I can make the two densities but I am not sure how to have separate axes for each density and how to insert a vertical blank space between the two...
-
-# Figure from https://journal.r-project.org/archive/2014/RJ-2014-005/index.html

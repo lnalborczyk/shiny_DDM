@@ -1,8 +1,8 @@
-# An interactive visualisation of the 4-parameter Wiener drift diffusion model
+# An interactive visualisation of the Wiener drift diffusion model
 
 ## Description
 
-Four parameters Wiener diffusion model, as formulated by Ratcliff (1978). Visualisation inspired by the visualisation from Alexandrowicz (2020).
+An interactive visualisation of the Wiener drift diffusion model, as formulated by Ratcliff (1978). Visualisation inspired by the visualisation from Alexandrowicz (2020).
 
 ## References
 
