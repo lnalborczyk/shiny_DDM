@@ -6,9 +6,8 @@ library(shinythemes)
 library(shinyhelper)
 library(hrbrthemes)
 library(tidyverse)
+library(RWiener)
 library(shiny)
-
-source("DDM_simulation.R")
 
 ################################################################################
 ############################# USER INTERFACE ###################################
@@ -19,27 +18,8 @@ ui <- shinyUI(
         title = "An interactive visualisation of the drift diffusion model",
         # choose a theme
         # themeSelector(),
-        # set a theme
+        # setting a theme
         theme = shinytheme("sandstone"),
-        
-        ##################################################################################
-        # --------------------- UI: Instructions Panel --------------------------------- #
-        ##################################################################################
-        
-        # tabPanel(
-        #     title = "Instructions",
-        #     # includes html file containing the instructions
-        #     # includeMarkdown("instructions.md"),
-        #     includeHTML("instructions.html"),
-        #     # includes a footer
-        #     hr(),
-        #     HTML(
-        #         paste(
-        #             "Written by <a href='https://www.barelysignificant.com'>
-        #             Ladislas Nalborczyk</a>. Last update: April 26th, 2019"
-        #             )
-        #         )
-        #     ),
         
         ##############################################################################
         # -------------------------- UI: 4DM --------------------------------------- #
@@ -126,7 +106,7 @@ ui <- shinyUI(
                     )
                 )
             
-            ) # end panel 4DDM
+            ) # ends panel 4DDM
         
         )
     ) # end UI
@@ -137,48 +117,51 @@ ui <- shinyUI(
 
 server <- function (input, output) {
     
-    ##################################################################################
-    # ---------------------- Server: scripts generation ---------------------------- #
-    ##################################################################################
-    
-    # Uses 'helpfiles' directory by default
-    # observe_helpers(withMathJax = TRUE)
-    
-    #####################################################################
-    # ---------------------- Server: Bias factor ---------------------- #
-    #####################################################################
+    ##############################################################
+    # ---------------------- Server: 4DDM ---------------------- #
+    ##############################################################
     
     output$BFdist.plot <-
         renderPlot({
             input$refresh
-                ddm(
-                    nobs = as.numeric(input$nobs),
+            
+                df <- rwiener(
+                    n = as.numeric(input$nobs),
                     alpha = as.numeric(input$alpha),
                     beta = as.numeric(input$beta),
                     delta = as.numeric(input$delta),
                     tau = as.numeric(input$tau)
                     )
-                # biasfactor(
-                #     nsims = input$nsims, nsamples = input$nsamples, origin = 0,
-                #     drift = input$drift, bfsd = 1, criterion = 10,
-                #     originsd = 0, driftsd = 0, prior = input$prior,
-                #     priorsd = 0
-                #     ) %>%
-                #     ggplot(aes(x = obs, y = bf, group = sim) ) +
-                #     geom_hline(yintercept = 0, linetype = 2) +
-                #     geom_line(alpha = 0.25) +
-                #     theme_ipsum_rc(base_size = 14) +
-                #     labs(
-                #         title = "Simulating the evolution of SBF trajectories",
-                #         subtitle = paste(
-                #             "For an effect of", input$drift,
-                #             "and a bias of", input$prior
-                #             ),
-                #         x = "Number of observations", y = "log(BF)"
-                #         )
+                
+                df %>%
+                    ggplot(aes(x = q) ) +
+                    geom_density(
+                        data = . %>% filter(resp == "upper"),
+                        aes(y = ..density..),
+                        colour = "steelblue", fill = "steelblue",
+                        outline.type = "upper", alpha = 0.8, adjust = 1, trim = TRUE
+                        ) +
+                    geom_density(
+                        data = . %>% filter(resp == "lower"),
+                        aes(y = -..density..), colour = "orangered", fill = "orangered",
+                        outline.type = "upper", alpha = 0.8, adjust = 1, trim = TRUE
+                        ) +
+                    geom_segment(
+                        aes(x = 0, xend = as.numeric(input$tau), y = 0, yend = 0),
+                        arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+                        size = 0.5
+                        ) +
+                    annotate(
+                        geom = "text",
+                        x = 0, y = 0, hjust = 0, vjust = -1, size = 3,
+                        label = "non-decision time"
+                        ) +
+                    theme_ipsum_rc() +
+                    labs(x = "Reaction time (in seconds)", y = "") +
+                    xlim(0, NA)
             })
     
 }
 
-# run the application 
+# running the application 
 shinyApp(ui = ui, server = server)

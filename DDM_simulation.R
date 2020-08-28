@@ -10,6 +10,9 @@ if (!require("hrbrthemes") ) install.packages("hrbrthemes"); library("hrbrthemes
 if (!require("tidyverse") ) install.packages("tidyverse"); library("tidyverse");
 if (!require("RWiener") ) install.packages("RWiener"); library("RWiener");
 
+nobs = 1e2; alpha = 2; beta = 0.5; delta = 0.5; tau = 0.3;
+df <- rwiener(n = nobs, alpha = alpha, tau = tau, beta = beta, delta = delta)
+
 ddm <- function (nobs = 1e2, alpha = 2, beta = 0.5, delta = 0.5, tau = 0.3) {
 
   # generates some data for given values of parameters
@@ -23,13 +26,35 @@ ddm <- function (nobs = 1e2, alpha = 2, beta = 0.5, delta = 0.5, tau = 0.3) {
     # geom_histogram(aes(x = q, y = ..density..), fill ="red", bins = 20) + 
     # geom_histogram(aes(x = q, y = -..density..), fill = "blue", bins = 20) +
     # geom_rug() +
-    geom_density(aes(y = ..density..), colour = "steelblue", fill = "steelblue", alpha = 0.8) +
-    geom_density(aes(y = -..density..), colour = "orangered", fill = "orangered", alpha = 0.8) +
+    geom_density(
+      data = . %>% filter(resp == "upper"),
+      aes(y = ..density..),
+      colour = "steelblue", fill = "steelblue",
+      outline.type = "upper", alpha = 0.8, adjust = 1, trim = TRUE
+      ) +
+    geom_density(
+      data = . %>% filter(resp == "lower"),
+      aes(y = -..density..), colour = "orangered", fill = "orangered",
+      outline.type = "upper", alpha = 0.8, adjust = 1, trim = TRUE
+      ) +
+    # geom_vline(xintercept = 0, lty = 2) +
+    # geom_hline(yintercept = 0, lty = 2) +
+    geom_segment(
+      aes(x = 0, xend = tau, y = 0, yend = 0),
+      arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+      size = 0.5
+      ) +
+    annotate(
+      geom = "text",
+      x = 0, y = 0, hjust = 0, vjust = -1, size = 3,
+      label = "non-decision time"
+    ) +
     # theme_bw(base_size = 12) +
     theme_ipsum_rc() +
-    # labs(title = "Simulating response time distributions", x = "Reaction time (in s)", y = "") +
-    labs(x = "Reaction time (in s)", y = "") +
-    scale_y_continuous(expand = c(0, 0), limits = c(NA, NA) )
+    labs(x = "Reaction time (in seconds)", y = "") +
+    xlim(0, NA)
+    # coord_cartesian(ylim = c(0, 0.1) )
+    # scale_y_continuous(expand = c(0, 0), limits = c(NA, NA) )
   
   }
 

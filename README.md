@@ -1,4 +1,4 @@
-# An interactive visualisation of the Wiener drift diffusion model
+# An interactive visualisation of the Wiener drift diffusion model (in progress)
 
 ## Description
 
