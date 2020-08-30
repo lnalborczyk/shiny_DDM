@@ -4,6 +4,8 @@
 
 An interactive visualisation of the Wiener drift diffusion model, as formulated by Ratcliff (1978). Visualisation inspired by the visualisation from Alexandrowicz (2020).
 
+The application is available online at https://barelysignificant.shinyapps.io/shiny_DDM/.
+
 ## References
 
 Alexandrowicz, R. W. (2020). The diffusion model visualizer: an interactive tool to understand the diffusion model parameters. Psychological Research.

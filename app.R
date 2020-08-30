@@ -41,15 +41,6 @@ ui <- shinyUI(
                         sidebarPanel(
                             id = "sidebar",
                             width = 4,
-                            # sliderInput(
-                            #     inputId = "nobs",
-                            #     label = "Select a number of observations",
-                            #     value = 100,
-                            #     min = 50,
-                            #     max = 500,
-                            #     step = 10,
-                            #     width = "500px"
-                            #     ),
                             sliderInput(
                                 inputId = "alpha",
                                 label = "Select a value for the boundary separation",
@@ -144,6 +135,19 @@ server <- function (input, output) {
                 beta <- as.numeric(input$beta)
                 delta <- as.numeric(input$delta)
                 tau <- as.numeric(input$tau)
+                
+                # computes number of correct and incorrect responses
+                correct_table <- table(df$resp) %>% data.frame
+                
+                n_correct <- correct_table %>%
+                    filter(Var1 == "upper") %>%
+                    pull(Freq) %>%
+                    as.numeric
+                
+                n_incorrect <- correct_table %>%
+                    filter(Var1 == "lower") %>%
+                    pull(Freq) %>%
+                    as.numeric
                 
                 # compute densities
                 ud <- density(df$q[df$resp == "upper"], cut = 0)
@@ -282,20 +286,46 @@ server <- function (input, output) {
                         color = "black"
                         ) +
                     # labelling distributions
-                    geom_text(
-                        data = . %>% filter(resp == "upper"),
-                        aes(x = min(x), y = min(y) ),
+                    annotate(
+                        geom = "label",
+                        x = min(df2$x[df2$resp == "upper"]),
+                        y = min(df2$y[df2$resp == "upper"]),
                         hjust = 0, vjust = -0.5, size = 4,
-                        label = "RT distribution for correct responses",
-                        color = "white"
+                        label = paste0(
+                            "RT distribution for correct responses (n = ",
+                            n_correct, ")"
+                            )
                         ) +
-                    geom_text(
-                        data = . %>% filter(resp == "lower"),
-                        aes(x = min(x), y = max(y) ),
+                    annotate(
+                        geom = "label",
+                        x = min(df2$x[df2$resp == "lower"]),
+                        y = max(df2$y[df2$resp == "lower"]),
                         hjust = 0, vjust = 1.5, size = 4,
-                        label = "RT distribution for incorrect responses",
-                        color = "white"
+                        label = paste0(
+                            "RT distribution for incorrect responses (n = ",
+                            n_incorrect, ")"
+                            )
                         ) +
+                    # geom_text(
+                    #     data = . %>% filter(resp == "upper"),
+                    #     aes(x = min(x), y = min(y) ),
+                    #     hjust = 0, vjust = -0.5, size = 4,
+                    #     label = paste0(
+                    #         "RT distribution for correct responses (n = ",
+                    #         n_correct, ")"
+                    #         ),
+                    #     color = "white"
+                    #     ) +
+                    # geom_text(
+                    #     data = . %>% filter(resp == "lower"),
+                    #     aes(x = min(x), y = max(y) ),
+                    #     hjust = 0, vjust = 1.5, size = 4,
+                    #     label = paste0(
+                    #         "RT distribution for incorrect responses (n = ",
+                    #         n_incorrect, ")"
+                    #         ),
+                    #     color = "white"
+                    #     ) +
                     # aesthetics
                     theme_ipsum_rc(base_size = 12) +
                     theme(
