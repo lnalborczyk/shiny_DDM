@@ -5,6 +5,6 @@ account: barelysignificant
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2724605
-bundleId: 3571953
+bundleId: 3572000
 url: https://barelysignificant.shinyapps.io/shiny_DDM/
-when: 1598772842.88481
+when: 1598774807.26866

@@ -292,8 +292,8 @@ server <- function (input, output) {
                         y = min(df2$y[df2$resp == "upper"]),
                         hjust = 0, vjust = -0.5, size = 4,
                         label = paste0(
-                            "RT distribution for correct responses (n = ",
-                            n_correct, ")"
+                            "RT distribution for correct responses (",
+                            (n_correct / 1e3) * 100, "%)"
                             )
                         ) +
                     annotate(
@@ -302,8 +302,8 @@ server <- function (input, output) {
                         y = max(df2$y[df2$resp == "lower"]),
                         hjust = 0, vjust = 1.5, size = 4,
                         label = paste0(
-                            "RT distribution for incorrect responses (n = ",
-                            n_incorrect, ")"
+                            "RT distribution for incorrect responses (",
+                            (n_incorrect / 1e3) * 100, "%)"
                             )
                         ) +
                     # geom_text(
