@@ -97,7 +97,7 @@ ui <- shinyUI(
             HTML(
                 paste(
                     "Written by <a href='https://www.barelysignificant.com'>
-                    Ladislas Nalborczyk</a>. Last update: August 30th, 2020"
+                    Ladislas Nalborczyk</a>. Last update: August 31th, 2020"
                     )
                 )
             
@@ -293,7 +293,7 @@ server <- function (input, output) {
                         hjust = 0, vjust = -0.5, size = 4,
                         label = paste0(
                             "RT distribution for correct responses (",
-                            (n_correct / 1e3) * 100, "%)"
+                            (n_correct / 1e3) * 100, "% of trials)"
                             )
                         ) +
                     annotate(
@@ -303,7 +303,7 @@ server <- function (input, output) {
                         hjust = 0, vjust = 1.5, size = 4,
                         label = paste0(
                             "RT distribution for incorrect responses (",
-                            (n_incorrect / 1e3) * 100, "%)"
+                            (n_incorrect / 1e3) * 100, "% of trials)"
                             )
                         ) +
                     # geom_text(
