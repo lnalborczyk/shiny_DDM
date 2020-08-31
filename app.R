@@ -120,7 +120,7 @@ server <- function (input, output) {
         renderPlot({
             input$refresh
             
-            # nobs = 1e3; alpha = 2; beta = 0.5; delta = 0.5; tau = 0.3;
+            # nobs = 1e3; alpha = 2; beta = 0.5; delta = 0.5; tau = 0.8;
             # df <- rwiener(n = nobs, alpha = alpha, tau = tau, beta = beta, delta = delta)
             
                 df <- rwiener(
@@ -306,26 +306,6 @@ server <- function (input, output) {
                             (n_incorrect / 1e3) * 100, "% of trials)"
                             )
                         ) +
-                    # geom_text(
-                    #     data = . %>% filter(resp == "upper"),
-                    #     aes(x = min(x), y = min(y) ),
-                    #     hjust = 0, vjust = -0.5, size = 4,
-                    #     label = paste0(
-                    #         "RT distribution for correct responses (n = ",
-                    #         n_correct, ")"
-                    #         ),
-                    #     color = "white"
-                    #     ) +
-                    # geom_text(
-                    #     data = . %>% filter(resp == "lower"),
-                    #     aes(x = min(x), y = max(y) ),
-                    #     hjust = 0, vjust = 1.5, size = 4,
-                    #     label = paste0(
-                    #         "RT distribution for incorrect responses (n = ",
-                    #         n_incorrect, ")"
-                    #         ),
-                    #     color = "white"
-                    #     ) +
                     # aesthetics
                     theme_ipsum_rc(base_size = 12) +
                     theme(
