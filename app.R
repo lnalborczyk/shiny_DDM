@@ -6,6 +6,7 @@ library(shinythemes)
 library(shinyhelper)
 library(hrbrthemes)
 library(tidyverse)
+library(pBrackets)
 library(RWiener)
 library(shiny)
 
@@ -145,7 +146,7 @@ ui <- shinyUI(
             HTML(
                 paste(
                     "Written by <a href='https://www.barelysignificant.com'>
-                    Ladislas Nalborczyk</a>. Last update: August 31th, 2020"
+                    Ladislas Nalborczyk</a>. Last update: September 2, 2020"
                     )
                 )
             
@@ -210,7 +211,10 @@ server <- function (input, output) {
             s <- (alpha / 10) * (1 - 0.5) + 0.5
             
             # horizontal position of the densities
-            x <- c(ud$x[1], ud$x, ud$x[length(ud$x)], ld$x[1], ld$x, ld$x[length(ld$x)])
+            x <- c(
+                ud$x[1], ud$x, ud$x[length(ud$x)],
+                ld$x[1], ld$x, ld$x[length(ld$x)]
+                )
             
             # vertical position of the densities
             y <- c(s, ud$y + s, s, -s, -ld$y - s, -s)
@@ -309,8 +313,15 @@ server <- function (input, output) {
                 #     size = 0.5, colour = "darkgreen"
                 #     ) +
                 geom_spoke(
-                    aes(x = tau, y = beta_s, angle = drift_angle * (pi / 180), radius = 0.5),
-                    arrow = arrow(length = unit(0.2, "cm"), ends = "last", type = "closed"),
+                    aes(
+                        x = tau, y = beta_s,
+                        angle = drift_angle * (pi / 180),
+                        radius = 0.5
+                        ),
+                    arrow = arrow(
+                        length = unit(0.2, "cm"),
+                        ends = "last", type = "closed"
+                        ),
                     color  = "darkgreen"
                     ) +
                 annotate(
@@ -366,14 +377,17 @@ server <- function (input, output) {
                         )
                     ) +
                 # aesthetics
-                theme_ipsum_rc(base_size = 12, axis_title_size = 12) +
+                theme_ipsum_rc(base_size = 14, axis_title_size = 14) +
                 theme(
                     axis.text.y = element_blank(),
                     plot.margin = unit(c(1, 1, 1, 3), "cm")
                     ) +
                 labs(x = "Reaction time (in seconds)", y = "") +
-                coord_cartesian(xlim = c(0, NA), clip = "off")
-                
+                # extends plotting area
+                coord_cartesian(xlim = c(0, NA), clip = "off") +
+                # adds a second axis on the top
+                scale_x_continuous(sec.axis = sec_axis(trans = ~.) )
+            
             })
     
 }
