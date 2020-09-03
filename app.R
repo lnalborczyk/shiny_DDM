@@ -1,12 +1,14 @@
-##############################################################################
-# --------------- Shiny App - An interactive visualisation of the DDM ------ #
-##############################################################################
+#######################################################
+# Shiny App - An interactive visualisation of the DDM #
+# --------------------------------------------------- #
+# Written by Ladislas Nalborczyk                      #
+# Last updated on September 3, 2020                   #
+#######################################################
 
 library(shinythemes)
 library(shinyhelper)
 library(hrbrthemes)
 library(tidyverse)
-library(pBrackets)
 library(RWiener)
 library(shiny)
 
@@ -34,7 +36,8 @@ ui <- shinyUI(
                 fluidRow(h4(HTML(
                 "The code underlying this application can be found at
                 <a href='https://github.com/lnalborczyk/shiny_DDM'>
-                https://github.com/lnalborczyk/shiny_DDM</a>."
+                https://github.com/lnalborczyk/shiny_DDM</a>.
+                NB: the non-decision time is represented by the shaded area."
                 ) ) ),
                 
                 fluidRow(
@@ -146,7 +149,7 @@ ui <- shinyUI(
             HTML(
                 paste(
                     "Written by <a href='https://www.barelysignificant.com'>
-                    Ladislas Nalborczyk</a>. Last update: September 2, 2020"
+                    Ladislas Nalborczyk</a>. Last update: September 3, 2020"
                     )
                 )
             
@@ -180,6 +183,23 @@ server <- function (input, output) {
             delta <- as.numeric(input$delta)
             tau <- as.numeric(input$tau)
             
+            # defines the grid of possible RT values
+            # rt_grid <- seq.int(from = 0, to = 15, length.out = 1e3)
+            
+            # computes the lower density
+            # lower_dens <- dwiener(
+            #     q = rt_grid,
+            #     alpha = alpha, tau = tau, beta = beta, delta = delta,
+            #     resp = "lower", give_log = FALSE
+            #     )
+            
+            # computes the upper density
+            # upper_dens <- dwiener(
+            #     q = rt_grid,
+            #     alpha = alpha, tau = tau, beta = beta, delta = delta,
+            #     resp = "upper", give_log = FALSE
+            #     )
+            
             # generates some data using the RWiener package
             df <- rwiener(
                 n = 1e3,
@@ -189,15 +209,15 @@ server <- function (input, output) {
                 tau = tau
                 )
             
-            # computes the number of correct and incorrect responses
-            correct_table <- table(df$resp) %>% data.frame
+            # computes the number of upper and lower responses
+            response_table <- table(df$resp) %>% data.frame
             
-            n_correct <- correct_table %>%
+            n_upper <- response_table %>%
                 filter(Var1 == "upper") %>%
                 pull(Freq) %>%
                 as.numeric
             
-            n_incorrect <- correct_table %>%
+            n_lower <- response_table %>%
                 filter(Var1 == "lower") %>%
                 pull(Freq) %>%
                 as.numeric
@@ -361,8 +381,8 @@ server <- function (input, output) {
                     hjust = 0, vjust = -0.5,
                     size = 5,
                     label = paste0(
-                        "RT distribution for correct responses (",
-                        (n_correct / 1e3) * 100, "% of trials)"
+                        "RT distribution for upper responses (",
+                        (n_upper / 1e3) * 100, "% of trials)"
                         )
                     ) +
                 annotate(
@@ -372,8 +392,8 @@ server <- function (input, output) {
                     hjust = 0, vjust = 1.5,
                     size = 5,
                     label = paste0(
-                        "RT distribution for incorrect responses (",
-                        (n_incorrect / 1e3) * 100, "% of trials)"
+                        "RT distribution for lower responses (",
+                        (n_lower / 1e3) * 100, "% of trials)"
                         )
                     ) +
                 # aesthetics
@@ -382,7 +402,7 @@ server <- function (input, output) {
                     axis.text.y = element_blank(),
                     plot.margin = unit(c(1, 1, 1, 3), "cm")
                     ) +
-                labs(x = "Reaction time (in seconds)", y = "") +
+                labs(x = "Response time (in seconds)", y = "") +
                 # extends plotting area
                 coord_cartesian(xlim = c(0, NA), clip = "off") +
                 # adds a second axis on the top
@@ -395,5 +415,5 @@ server <- function (input, output) {
 # running the application 
 shinyApp(ui = ui, server = server)
 
-# nobs = 1e3; alpha = 2; beta = 0.5; delta = 0.5; tau = 0.8;
+# nobs = 1e3; alpha = 2; beta = 0.5; delta = 0; tau = 1;
 # df <- rwiener(n = nobs, alpha = alpha, tau = tau, beta = beta, delta = delta)
