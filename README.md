@@ -4,7 +4,7 @@
 
 An interactive visualisation of the Wiener drift diffusion model, as formulated by Ratcliff (1978). Visualisation inspired by the visualisation from Alexandrowicz (2020).
 
-![4DDM](figures/4DDM.pdf)
+![4DDM](figures/4DDM.png)
 
 The application is available online at https://barelysignificant.shinyapps.io/shiny_DDM/.
 
