@@ -259,7 +259,28 @@ server <- function (input, output) {
             # defines colors for lower and upper densities
             lower_color <- "#c72e29"
             upper_color <- "#016392"
-                
+            
+            # generates some evidence trajectories
+            # traj_length <- 100
+            # traj_y <- cumsum(c(beta_s, rnorm(traj_length-1, delta, 0.1) ) )
+            # traj_x <- seq.int(from = tau, to = max(df2$x), length.out = 1e2)
+            
+            # when did the evidence crossed the boundary first?
+            # boundary_first_hit <- min(which(
+            #     traj_y >= min(df2$y[df2$resp=="upper"]) |
+            #         traj_y <= max(df2$y[df2$resp=="lower"])
+            #     ) )
+            # 
+            # trajectories <- data.frame(x = traj_x, y = traj_y) %>%
+            #     slice(1:boundary_first_hit) %>%
+            #     mutate(
+            #         y = ifelse(
+            #             row_number() == n(),
+            #             max(df2$y[df2$resp=="lower"]),
+            #             traj_y
+            #             )
+            #         )
+            
             ############
             # plotting #
             ############
@@ -277,7 +298,9 @@ server <- function (input, output) {
                     aes(x = 0, xend = max_x, y = max(y), yend = max(y) ),
                     color = lower_color
                     ) +
+                # plotting densities
                 geom_polygon(alpha = 0.8) +
+                # defining densities colors
                 scale_fill_manual(
                     values = c(lower_color, upper_color),
                     guide = guide_none()
@@ -286,6 +309,13 @@ server <- function (input, output) {
                     values = c(lower_color, upper_color),
                     guide = guide_none()
                     ) +
+                # plots some evidence trajectory
+                # geom_line(
+                #     data = trajectories,
+                #     aes(x = x, y = y),
+                #     inherit.aes = FALSE,
+                #     alpha = 0.5
+                #     ) +
                 # stimulus onset
                 geom_vline(xintercept = 0, lty = 2, col = "grey30") +
                 annotate(
@@ -415,5 +445,5 @@ server <- function (input, output) {
 # running the application 
 shinyApp(ui = ui, server = server)
 
-# nobs = 1e3; alpha = 2; beta = 0.5; delta = 0; tau = 1;
+# nobs = 1e3; alpha = 2; beta = 0.3; delta = 0.5; tau = 1;
 # df <- rwiener(n = nobs, alpha = alpha, tau = tau, beta = beta, delta = delta)
