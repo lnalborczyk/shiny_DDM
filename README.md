@@ -1,4 +1,4 @@
-# An interactive visualisation of the Wiener drift diffusion model (in progress)
+# An interactive visualisation of the Wiener drift diffusion model
 
 ## Description
 
@@ -7,6 +7,10 @@ An interactive visualisation of the Wiener drift diffusion model, as formulated 
 ![4DDM](figures/4DDM.png)
 
 The application is available online at https://barelysignificant.shinyapps.io/shiny_DDM/.
+
+## Updated app
+
+A revised (better) version is available at https://lnalborczyk.github.io/apps/ddm/.
 
 ## References
 
